@@ -9,7 +9,7 @@ import {
   Area
 } from 'recharts';
 import { calculateRMD } from './utils/rmdTable';
-import { calculateTax, FilingStatus } from './utils/taxUtils';
+import { calculateTax, FilingStatus, STANDARD_DEDUCTION_2026, TAX_BRACKETS_2026 } from './utils/taxUtils';
 import { Info } from 'lucide-react';
 
 const TooltipItem: React.FC<{ text: string }> = ({ text }) => (
@@ -128,24 +128,40 @@ const App: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="status">Filing Status</label>
-            <select
-              id="status"
-              value={filingStatus}
-              onChange={(e) => setFilingStatus(e.target.value as FilingStatus)}
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                backgroundColor: '#0f172a',
-                border: '1px solid #1e293b',
-                borderRadius: '8px',
-                color: '#f8fafc',
-                fontSize: '1rem'
-              }}
-            >
-              <option value="single">Single</option>
-              <option value="mfj">Married Filing Jointly</option>
-            </select>
+            <label>Filing Status</label>
+            <div className="pill-container">
+              <button
+                type="button"
+                className={`pill-button ${filingStatus === 'single' ? 'active' : ''}`}
+                onClick={() => setFilingStatus('single')}
+              >
+                Single
+              </button>
+              <button
+                type="button"
+                className={`pill-button ${filingStatus === 'mfj' ? 'active' : ''}`}
+                onClick={() => setFilingStatus('mfj')}
+              >
+                Married (MFJ)
+              </button>
+            </div>
+
+            <div className="info-box">
+              <span className="info-label">Standard Deduction (2026)</span>
+              <span className="info-value">{formatCurrency(STANDARD_DEDUCTION_2026[filingStatus])}</span>
+            </div>
+
+            <div className="tax-bracket-summary">
+              <span className="info-label">Tax Brackets (Selected Status)</span>
+              <div className="tax-bracket-grid">
+                {TAX_BRACKETS_2026[filingStatus].map((bracket, i) => (
+                  <div key={i} className="tax-bracket-item">
+                    <span>{bracket.rate * 100}%</span>
+                    <span>&gt; {formatCurrency(bracket.threshold)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
 
           <div className="stats-grid" style={{ gridTemplateColumns: '1fr', marginTop: '2rem' }}>

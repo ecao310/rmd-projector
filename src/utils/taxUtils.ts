@@ -5,7 +5,7 @@ interface TaxBracket {
   threshold: number;
 }
 
-const TAX_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
+export const TAX_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
   single: [
     { rate: 0.10, threshold: 0 },
     { rate: 0.12, threshold: 12400 },
@@ -26,12 +26,12 @@ const TAX_BRACKETS_2026: Record<FilingStatus, TaxBracket[]> = {
   ],
 };
 
-const STANDARD_DEDUCTION_2026: Record<FilingStatus, number> = {
+export const STANDARD_DEDUCTION_2026: Record<FilingStatus, number> = {
   single: 16100,
   mfj: 32200,
 };
 
-const ADDITIONAL_65_PLUS_2026: Record<FilingStatus, number> = {
+export const ADDITIONAL_65_PLUS_2026: Record<FilingStatus, number> = {
   single: 2050,
   mfj: 1650, // per person, assuming both are 65+ for simplicity in MFJ context
 };

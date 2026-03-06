@@ -247,8 +247,8 @@ const App: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ marginTop: '2rem' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+          <div className="table-container">
+            <table>
               <thead>
                 <tr style={{ textAlign: 'left', borderBottom: '1px solid #1e293b' }}>
                   <th style={{ padding: '0.75rem' }}>Age</th>

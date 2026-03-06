@@ -97,6 +97,14 @@ h1 {
 }
 
 @media (max-width: 768px) {
+  #root {
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
   .grid {
     grid-template-columns: 1fr;
   }
@@ -313,6 +321,45 @@ tr.has-tooltip:hover::after {
 .tax-bracket-item span:last-child {
   color: #f8fafc;
   font-family: monospace;
+}
+
+/* Table Styles */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 2rem;
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.3);
+  scrollbar-width: thin;
+  scrollbar-color: #38bdf8 transparent;
+}
+
+.table-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background-color: #38bdf8;
+  border-radius: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.table-container th {
+  white-space: normal;
+  vertical-align: bottom;
+}
+
+.table-container td {
+  white-space: nowrap;
 }
 
 /* Info Section */

@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 :root {
   font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -53,6 +59,7 @@ label {
 }
 
 input {
+  width: 100%;
   background: rgba(15, 23, 42, 0.6);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.75rem;
@@ -306,4 +313,80 @@ tr.has-tooltip:hover::after {
 .tax-bracket-item span:last-child {
   color: #f8fafc;
   font-family: monospace;
+}
+
+/* Info Section */
+.info-section {
+  grid-column: 1 / -1;
+  margin-top: 1rem;
+  /* Increased margin for vertical spacing */
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.info-section summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: #38bdf8;
+  list-style: none;
+  /* Hides default marker in some browsers */
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+/* Hide default markers across browsers */
+.info-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.info-section summary::marker {
+  display: none;
+  content: "";
+}
+
+.info-section summary::before {
+  content: '▶';
+  font-size: 0.75rem;
+  transition: transform 0.2s ease;
+}
+
+.info-section[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.info-content {
+  margin-top: 1.5rem;
+  line-height: 1.6;
+}
+
+.info-content p {
+  margin-bottom: 1rem;
+}
+
+.info-content ul {
+  padding-left: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-content li {
+  margin-bottom: 0.5rem;
+}
+
+.info-footer {
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.info-link {
+  color: #818cf8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.info-link:hover {
+  color: #38bdf8;
+  text-decoration: underline;
 }

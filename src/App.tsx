@@ -290,6 +290,33 @@ const App: React.FC = () => {
           </div>
         </main>
       </div>
+
+      <details className="card info-section">
+        <summary>About these numbers</summary>
+        <div className="info-content">
+          <p>
+            <strong>Required Minimum Distributions (RMDs)</strong> are the minimum amounts you must withdraw from your retirement accounts each year, generally starting at age 73 or 75, depending on your birth year.
+            <br />
+            <a
+              href="https://www.irs.gov/publications/p590b"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="info-link"
+              style={{ display: 'inline-block', marginTop: '0.5rem' }}
+            >
+              Official IRS Documentation: Publication 590-B →
+            </a>
+          </p>
+
+          <hr style={{ border: 'none', borderTop: '1px solid rgba(255, 255, 255, 0.05)', margin: '1.5rem 0' }} />
+
+          <p><strong>How these projections work:</strong></p>
+          <ul>
+            <li><strong>Annual withdrawals start immediately:</strong> The projection assumes you begin taking distributions in the current year.</li>
+            <li><strong>Withdrawal Calculation:</strong> Yearly withdrawals are calculated as the maximum of your planned annual withdrawal and the Required Minimum Distribution (RMD) amount for that year.</li>
+          </ul>
+        </div>
+      </details>
     </div>
   );
 };

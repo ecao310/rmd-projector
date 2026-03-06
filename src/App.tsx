@@ -10,6 +10,14 @@ import {
 } from 'recharts';
 import { calculateRMD } from './utils/rmdTable';
 import { calculateTax, FilingStatus } from './utils/taxUtils';
+import { Info } from 'lucide-react';
+
+const TooltipItem: React.FC<{ text: string }> = ({ text }) => (
+  <span className="tooltip-container">
+    <Info size={14} color="#94a3b8" />
+    <span className="tooltip-text">{text}</span>
+  </span>
+);
 
 interface ProjectionData {
   year: number;
@@ -74,7 +82,10 @@ const App: React.FC = () => {
       <div className="grid">
         <aside className="card">
           <div className="input-group">
-            <label htmlFor="portfolio">Initial Portfolio Size ($)</label>
+            <label htmlFor="portfolio">
+              Initial Portfolio Size ($)
+              <TooltipItem text="Include only retirement accounts subject to RMDs (e.g., Traditional IRA, 401(k))." />
+            </label>
             <input
               id="portfolio"
               type="number"
@@ -94,7 +105,10 @@ const App: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="growth">Assumed Annual Growth (%)</label>
+            <label htmlFor="growth">
+              Assumed Annual Growth (%)
+              <TooltipItem text="Adjust for inflation. For example, use 4% if you expect 7% investment growth minus 3% inflation." />
+            </label>
             <input
               id="growth"
               type="number"
@@ -144,7 +158,10 @@ const App: React.FC = () => {
               <div className="stat-value">{formatCurrency(totalRMD)}</div>
             </div>
             <div className="stat-card">
-              <div className="stat-label">Total Projected Taxes</div>
+              <div className="stat-label">
+                Total Projected Taxes
+                <TooltipItem text="Estimated income tax paid on the RMD based on your filing status." />
+              </div>
               <div className="stat-value" style={{ color: '#f87171' }}>{formatCurrency(totalTax)}</div>
             </div>
           </div>
@@ -183,7 +200,7 @@ const App: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                  formatter={(value: any, name?: string) => [formatCurrency(Number(value)), name === 'rmd' ? 'Gross RMD' : name === 'tax' ? 'Estimated Tax' : 'Balance']}
+                  formatter={(value: number | string | undefined, name?: string) => [formatCurrency(Number(value || 0)), name === 'rmd' ? 'Gross RMD' : name === 'tax' ? 'Estimated Tax' : 'Balance']}
                   labelFormatter={(age) => `Age: ${age}`}
                 />
                 <Area
@@ -216,13 +233,18 @@ const App: React.FC = () => {
                   <th style={{ padding: '0.75rem' }}>Year</th>
                   <th style={{ padding: '0.75rem' }}>Balance</th>
                   <th style={{ padding: '0.75rem' }}>Gross RMD</th>
-                  <th style={{ padding: '0.75rem' }}>Est. Tax</th>
+                  <th style={{ padding: '0.75rem' }}>
+                    Est. Tax
+                    <TooltipItem text="Estimated income tax paid on the RMD." />
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {projection.map((d: ProjectionData) => (
                   <tr
                     key={d.age}
+                    className={d.rmd > annualWithdrawal ? 'has-tooltip' : ''}
+                    data-tooltip={d.rmd > annualWithdrawal ? "This year, your RMD exceeds your planned annual withdrawal." : undefined}
                     style={{
                       borderBottom: '1px solid #0f172a',
                       backgroundColor: d.rmd > annualWithdrawal ? 'rgba(239, 68, 68, 0.1)' : 'transparent'

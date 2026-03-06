@@ -143,3 +143,82 @@ button {
 button:hover {
   opacity: 0.9;
 }
+
+/* Tooltip container */
+.tooltip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+  margin-left: 4px;
+}
+
+/* Tooltip text */
+.tooltip-text {
+  visibility: hidden;
+  width: 240px;
+  background-color: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  color: #f8fafc;
+  text-align: left;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+  position: absolute;
+  z-index: 100;
+  bottom: 125%; /* Position above */
+  left: 50%;
+  margin-left: -120px;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  transform: translateY(10px);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 400;
+  pointer-events: none;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Tooltip arrow */
+.tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* At the bottom of tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Table row tooltip variant */
+tr.has-tooltip {
+  position: relative;
+}
+
+tr.has-tooltip:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  color: #f8fafc;
+  padding: 8px 12px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  font-size: 0.75rem;
+  z-index: 100;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  top: 0;
+  width: 280px;
+  white-space: normal;
+  pointer-events: none;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}

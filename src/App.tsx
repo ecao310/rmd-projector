@@ -9,18 +9,22 @@ import {
   Area
 } from 'recharts';
 import { calculateRMD } from './utils/rmdTable';
+import { calculateTax, FilingStatus } from './utils/taxUtils';
 
 interface ProjectionData {
   year: number;
   age: number;
   balance: number;
   rmd: number;
+  tax: number;
+  netRmd: number;
 }
 
 const App: React.FC = () => {
   const [portfolioSize, setPortfolioSize] = useState<number>(500000);
   const [currentAge, setCurrentAge] = useState<number>(65);
   const [growthRate, setGrowthRate] = useState<number>(5);
+  const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
 
   const projection = useMemo(() => {
     const data: ProjectionData[] = [];
@@ -30,12 +34,16 @@ const App: React.FC = () => {
     for (let age = currentAge; age <= 100; age++) {
       const year = startYear + (age - currentAge);
       const rmd = calculateRMD(age, currentBalance);
+      const tax = calculateTax(rmd, filingStatus, age);
+      const netRmd = rmd - tax;
 
       data.push({
         year,
         age,
         balance: Math.round(currentBalance),
         rmd: Math.round(rmd),
+        tax: Math.round(tax),
+        netRmd: Math.round(netRmd),
       });
 
       // Simple growth model: RMD is taken out, then growth is applied to the remainder
@@ -44,9 +52,10 @@ const App: React.FC = () => {
       if (currentBalance <= 0) break;
     }
     return data;
-  }, [portfolioSize, currentAge, growthRate]);
+  }, [portfolioSize, currentAge, growthRate, filingStatus]);
 
   const totalRMD = projection.reduce((sum: number, d: ProjectionData) => sum + d.rmd, 0);
+  const totalTax = projection.reduce((sum: number, d: ProjectionData) => sum + d.tax, 0);
   const rmdStartYear = projection.find((d: ProjectionData) => d.rmd > 0)?.year;
 
   const formatCurrency = (value: number) =>
@@ -56,7 +65,7 @@ const App: React.FC = () => {
     <div className="container">
       <header>
         <h1>RMD Projector</h1>
-        <p className="subtitle">MVP: Project your required minimum distributions and portfolio health.</p>
+        <p className="subtitle">Project your required minimum distributions, estimated taxes, and portfolio health.</p>
       </header>
 
       <div className="grid">
@@ -91,14 +100,39 @@ const App: React.FC = () => {
             />
           </div>
 
+          <div className="input-group">
+            <label htmlFor="status">Filing Status</label>
+            <select
+              id="status"
+              value={filingStatus}
+              onChange={(e) => setFilingStatus(e.target.value as FilingStatus)}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                backgroundColor: '#0f172a',
+                border: '1px solid #1e293b',
+                borderRadius: '8px',
+                color: '#f8fafc',
+                fontSize: '1rem'
+              }}
+            >
+              <option value="single">Single</option>
+              <option value="mfj">Married Filing Jointly</option>
+            </select>
+          </div>
+
           <div className="stats-grid" style={{ gridTemplateColumns: '1fr', marginTop: '2rem' }}>
             <div className="stat-card">
               <div className="stat-label">RMD Start Year</div>
               <div className="stat-value">{rmdStartYear || 'N/A'}</div>
             </div>
             <div className="stat-card">
-              <div className="stat-label">Total Projected RMDs (to 100)</div>
+              <div className="stat-label">Total Projected RMDs</div>
               <div className="stat-value">{formatCurrency(totalRMD)}</div>
+            </div>
+            <div className="stat-card">
+              <div className="stat-label">Total Projected Taxes</div>
+              <div className="stat-value" style={{ color: '#f87171' }}>{formatCurrency(totalTax)}</div>
             </div>
           </div>
         </aside>
@@ -136,12 +170,13 @@ const App: React.FC = () => {
                 />
                 <Tooltip
                   contentStyle={{ backgroundColor: '#0f172a', border: '1px solid #1e293b', borderRadius: '8px' }}
-                  formatter={(value: any) => formatCurrency(Number(value))}
+                  formatter={(value: any, name?: string) => [formatCurrency(Number(value)), name === 'rmd' ? 'Gross RMD' : name === 'tax' ? 'Estimated Tax' : 'Balance']}
                   labelFormatter={(age) => `Age: ${age}`}
                 />
                 <Area
                   type="monotone"
                   dataKey="balance"
+                  name="balance"
                   stroke="#38bdf8"
                   fillOpacity={1}
                   fill="url(#colorBalance)"
@@ -150,6 +185,7 @@ const App: React.FC = () => {
                 <Area
                   type="monotone"
                   dataKey="rmd"
+                  name="rmd"
                   stroke="#f87171"
                   fill="#f87171"
                   fillOpacity={0.1}
@@ -159,14 +195,15 @@ const App: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ marginTop: '2rem', maxHeight: '300px', overflowY: 'auto' }}>
+          <div style={{ marginTop: '2rem', maxHeight: '400px', overflowY: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
                 <tr style={{ textAlign: 'left', borderBottom: '1px solid #1e293b' }}>
                   <th style={{ padding: '0.75rem' }}>Age</th>
                   <th style={{ padding: '0.75rem' }}>Year</th>
                   <th style={{ padding: '0.75rem' }}>Balance</th>
-                  <th style={{ padding: '0.75rem' }}>Annual RMD</th>
+                  <th style={{ padding: '0.75rem' }}>Gross RMD</th>
+                  <th style={{ padding: '0.75rem' }}>Est. Tax</th>
                 </tr>
               </thead>
               <tbody>
@@ -177,6 +214,9 @@ const App: React.FC = () => {
                     <td style={{ padding: '0.75rem' }}>{formatCurrency(d.balance)}</td>
                     <td style={{ padding: '0.75rem', color: d.rmd > 0 ? '#f87171' : '#94a3b8' }}>
                       {d.rmd > 0 ? formatCurrency(d.rmd) : '—'}
+                    </td>
+                    <td style={{ padding: '0.75rem', color: d.tax > 0 ? '#f87171' : '#94a3b8' }}>
+                      {d.tax > 0 ? formatCurrency(d.tax) : '—'}
                     </td>
                   </tr>
                 ))}

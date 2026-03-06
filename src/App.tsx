@@ -89,6 +89,7 @@ const App: React.FC = () => {
             <input
               id="portfolio"
               type="number"
+              step={10000}
               value={portfolioSize}
               onChange={(e) => setPortfolioSize(Number(e.target.value))}
             />
@@ -112,6 +113,7 @@ const App: React.FC = () => {
             <input
               id="growth"
               type="number"
+              step={0.1}
               value={growthRate}
               onChange={(e) => setGrowthRate(Number(e.target.value))}
             />
@@ -122,6 +124,7 @@ const App: React.FC = () => {
             <input
               id="withdrawal"
               type="number"
+              step={1000}
               value={annualWithdrawal}
               onChange={(e) => setAnnualWithdrawal(Number(e.target.value))}
             />

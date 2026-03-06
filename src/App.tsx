@@ -33,7 +33,7 @@ const App: React.FC = () => {
   const [portfolioSize, setPortfolioSize] = useState<number>(500000);
   const [currentAge, setCurrentAge] = useState<number>(65);
   const [growthRate, setGrowthRate] = useState<number>(5);
-  const [annualWithdrawal, setAnnualWithdrawal] = useState<number>(20000);
+  const [annualWithdrawal, setAnnualWithdrawal] = useState<number>(24000);
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
 
   const projection = useMemo(() => {

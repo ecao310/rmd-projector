@@ -24,6 +24,7 @@ const App: React.FC = () => {
   const [portfolioSize, setPortfolioSize] = useState<number>(500000);
   const [currentAge, setCurrentAge] = useState<number>(65);
   const [growthRate, setGrowthRate] = useState<number>(5);
+  const [annualWithdrawal, setAnnualWithdrawal] = useState<number>(20000);
   const [filingStatus, setFilingStatus] = useState<FilingStatus>('single');
 
   const projection = useMemo(() => {
@@ -46,13 +47,15 @@ const App: React.FC = () => {
         netRmd: Math.round(netRmd),
       });
 
-      // Simple growth model: RMD is taken out, then growth is applied to the remainder
-      currentBalance = (currentBalance - rmd) * (1 + growthRate / 100);
+      // Simplified gross withdrawal: the greater of the user spending amount or RMD
+      const actualWithdrawal = Math.max(rmd, annualWithdrawal);
+      // Growth model: actual withdrawal is taken out, then growth is applied to the remainder
+      currentBalance = (currentBalance - actualWithdrawal) * (1 + growthRate / 100);
 
       if (currentBalance <= 0) break;
     }
     return data;
-  }, [portfolioSize, currentAge, growthRate, filingStatus]);
+  }, [portfolioSize, currentAge, growthRate, filingStatus, annualWithdrawal]);
 
   const totalRMD = projection.reduce((sum: number, d: ProjectionData) => sum + d.rmd, 0);
   const totalTax = projection.reduce((sum: number, d: ProjectionData) => sum + d.tax, 0);
@@ -97,6 +100,16 @@ const App: React.FC = () => {
               type="number"
               value={growthRate}
               onChange={(e) => setGrowthRate(Number(e.target.value))}
+            />
+          </div>
+
+          <div className="input-group">
+            <label htmlFor="withdrawal">Annual Withdrawal ($)</label>
+            <input
+              id="withdrawal"
+              type="number"
+              value={annualWithdrawal}
+              onChange={(e) => setAnnualWithdrawal(Number(e.target.value))}
             />
           </div>
 
@@ -208,7 +221,13 @@ const App: React.FC = () => {
               </thead>
               <tbody>
                 {projection.map((d: ProjectionData) => (
-                  <tr key={d.age} style={{ borderBottom: '1px solid #0f172a' }}>
+                  <tr
+                    key={d.age}
+                    style={{
+                      borderBottom: '1px solid #0f172a',
+                      backgroundColor: d.rmd > annualWithdrawal ? 'rgba(239, 68, 68, 0.1)' : 'transparent'
+                    }}
+                  >
                     <td style={{ padding: '0.75rem' }}>{d.age}</td>
                     <td style={{ padding: '0.75rem', color: '#94a3b8' }}>{d.year}</td>
                     <td style={{ padding: '0.75rem' }}>{formatCurrency(d.balance)}</td>

@@ -241,7 +241,7 @@ const App: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div style={{ marginTop: '2rem', maxHeight: '400px', overflowY: 'auto' }}>
+          <div style={{ marginTop: '2rem' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
               <thead>
                 <tr style={{ textAlign: 'left', borderBottom: '1px solid #1e293b' }}>

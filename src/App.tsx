@@ -24,6 +24,7 @@ interface ProjectionData {
   age: number;
   balance: number;
   rmd: number;
+  withdrawal: number;
   tax: number;
   netRmd: number;
 }
@@ -43,20 +44,22 @@ const App: React.FC = () => {
     for (let age = currentAge; age <= 100; age++) {
       const year = startYear + (age - currentAge);
       const rmd = calculateRMD(age, currentBalance);
-      const tax = calculateTax(rmd, filingStatus, age);
-      const netRmd = rmd - tax;
+
+      // Simplified gross withdrawal: the greater of the user spending amount or RMD
+      const actualWithdrawal = Math.max(rmd, annualWithdrawal);
+      const tax = calculateTax(actualWithdrawal, filingStatus, age);
+      const netRmd = actualWithdrawal - tax;
 
       data.push({
         year,
         age,
         balance: Math.round(currentBalance),
         rmd: Math.round(rmd),
+        withdrawal: Math.round(actualWithdrawal),
         tax: Math.round(tax),
         netRmd: Math.round(netRmd),
       });
 
-      // Simplified gross withdrawal: the greater of the user spending amount or RMD
-      const actualWithdrawal = Math.max(rmd, annualWithdrawal);
       // Growth model: actual withdrawal is taken out, then growth is applied to the remainder
       currentBalance = (currentBalance - actualWithdrawal) * (1 + growthRate / 100);
 
@@ -179,7 +182,7 @@ const App: React.FC = () => {
             <div className="stat-card">
               <div className="stat-label">
                 Total Projected Taxes
-                <TooltipItem text="Estimated income tax paid on the RMD based on your filing status." />
+                <TooltipItem text="Estimated income tax paid on the total withdrawal (RMD or planned withdrawal) based on your filing status." />
               </div>
               <div className="stat-value" style={{ color: '#f87171' }}>{formatCurrency(totalTax)}</div>
             </div>
@@ -251,10 +254,11 @@ const App: React.FC = () => {
                   <th style={{ padding: '0.75rem' }}>Age</th>
                   <th style={{ padding: '0.75rem' }}>Year</th>
                   <th style={{ padding: '0.75rem' }}>Balance</th>
-                  <th style={{ padding: '0.75rem' }}>Gross RMD</th>
+                  <th style={{ padding: '0.75rem' }}>RMD</th>
+                  <th style={{ padding: '0.75rem' }}>Total Withdrawal</th>
                   <th style={{ padding: '0.75rem' }}>
                     Est. Tax
-                    <TooltipItem text="Estimated income tax paid on the RMD." />
+                    <TooltipItem text="Estimated income tax paid on the total withdrawal." />
                   </th>
                 </tr>
               </thead>
@@ -275,6 +279,7 @@ const App: React.FC = () => {
                     <td style={{ padding: '0.75rem', color: d.rmd > 0 ? '#f87171' : '#94a3b8' }}>
                       {d.rmd > 0 ? formatCurrency(d.rmd) : '—'}
                     </td>
+                    <td style={{ padding: '0.75rem' }}>{formatCurrency(d.withdrawal)}</td>
                     <td style={{ padding: '0.75rem', color: d.tax > 0 ? '#f87171' : '#94a3b8' }}>
                       {d.tax > 0 ? formatCurrency(d.tax) : '—'}
                     </td>

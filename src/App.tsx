@@ -12,10 +12,10 @@ import { calculateRMD } from './utils/rmdTable';
 import { calculateTax, FilingStatus, STANDARD_DEDUCTION_2026, TAX_BRACKETS_2026 } from './utils/taxUtils';
 import { Info } from 'lucide-react';
 
-const TooltipItem: React.FC<{ text: string }> = ({ text }) => (
+const TooltipItem: React.FC<{ text: string, alignRight?: boolean }> = ({ text, alignRight }) => (
   <span className="tooltip-container">
     <Info size={14} color="#94a3b8" />
-    <span className="tooltip-text">{text}</span>
+    <span className={`tooltip-text ${alignRight ? 'align-right' : ''}`}>{text}</span>
   </span>
 );
 
@@ -190,7 +190,7 @@ const App: React.FC = () => {
         </aside>
 
         <main className="card">
-          <div style={{ display: 'flex', gap: '2rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', gap: '2rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div style={{ width: 12, height: 12, borderRadius: '50%', backgroundColor: '#38bdf8' }} />
               <span style={{ fontSize: '0.875rem', color: '#94a3b8' }}>Portfolio Balance</span>
@@ -262,7 +262,7 @@ const App: React.FC = () => {
                   </th>
                   <th style={{ padding: '0.75rem' }}>
                     Est. Tax
-                    <TooltipItem text="Estimated income tax paid on the total withdrawal." />
+                    <TooltipItem text="Estimated income tax paid on the total withdrawal." alignRight />
                   </th>
                 </tr>
               </thead>

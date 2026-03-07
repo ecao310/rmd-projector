@@ -26,6 +26,7 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background: radial-gradient(circle at top left, #1e293b 0%, #0f172a 100%);
+  overflow-x: hidden;
 }
 
 #root {
@@ -215,6 +216,12 @@ button:hover {
   }
 }
 
+.tooltip-text.align-right {
+  left: auto;
+  right: -10px;
+  margin-left: 0;
+}
+
 /* Tooltip arrow */
 .tooltip-text::after {
   content: "";
@@ -226,6 +233,12 @@ button:hover {
   border-width: 5px;
   border-style: solid;
   border-color: rgba(15, 23, 42, 0.95) transparent transparent transparent;
+}
+
+.tooltip-text.align-right::after {
+  left: auto;
+  right: 12px;
+  margin-left: 0;
 }
 
 /* Show tooltip on hover */

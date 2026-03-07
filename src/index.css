@@ -43,6 +43,7 @@ body {
   border-radius: 1.5rem;
   padding: 2rem;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  min-width: 0;
 }
 
 .input-group {
@@ -98,7 +99,7 @@ h1 {
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
   gap: 2rem;
 }
 
@@ -112,7 +113,7 @@ h1 {
   }
 
   .grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
   }
 

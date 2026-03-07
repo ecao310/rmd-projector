@@ -215,6 +215,8 @@ const App: React.FC = () => {
                   dataKey="age"
                   stroke="#64748b"
                   label={{ value: 'Age', position: 'insideBottom', offset: -5, fill: '#64748b' }}
+                  interval="preserveStartEnd"
+                  minTickGap={10}
                 />
                 <YAxis
                   stroke="#64748b"
@@ -255,7 +257,9 @@ const App: React.FC = () => {
                   <th style={{ padding: '0.75rem' }}>Year</th>
                   <th style={{ padding: '0.75rem' }}>Balance</th>
                   <th style={{ padding: '0.75rem' }}>RMD</th>
-                  <th style={{ padding: '0.75rem' }}>Total Withdrawal</th>
+                  <th style={{ padding: '0.75rem' }}>
+                    <span className="desktop-only">Total </span>Withdrawal
+                  </th>
                   <th style={{ padding: '0.75rem' }}>
                     Est. Tax
                     <TooltipItem text="Estimated income tax paid on the total withdrawal." />

@@ -8,7 +8,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { calculateRMD } from './utils/rmdTable';
+import { calculateRMD, UNIFORM_LIFETIME_TABLE } from './utils/rmdTable';
 import { calculateTax, FilingStatus, STANDARD_DEDUCTION_2026, TAX_BRACKETS_2026 } from './utils/taxUtils';
 import { Info } from 'lucide-react';
 
@@ -268,16 +268,17 @@ const App: React.FC = () => {
               </thead>
               <tbody>
                 {projection.map((d: ProjectionData) => (
-                  <tr
-                    key={d.age}
-                    className={d.rmd > annualWithdrawal ? 'has-tooltip' : ''}
-                    data-tooltip={d.rmd > annualWithdrawal ? "This year, your RMD exceeds your planned annual withdrawal." : undefined}
-                    style={{
-                      borderBottom: '1px solid #0f172a',
-                      backgroundColor: d.rmd > annualWithdrawal ? 'rgba(239, 68, 68, 0.1)' : 'transparent'
-                    }}
-                  >
-                    <td style={{ padding: '0.75rem' }}>{d.age}</td>
+                  <tr key={d.age} style={{ borderBottom: '1px solid #0f172a' }}>
+                    <td style={{ padding: '0.75rem' }}>
+                      {d.rmd > 0 && UNIFORM_LIFETIME_TABLE[d.age] ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+                          {d.age}
+                          <TooltipItem text={`RMD: ${((1 / UNIFORM_LIFETIME_TABLE[d.age]) * 100).toFixed(2)}%`} />
+                        </span>
+                      ) : (
+                        d.age
+                      )}
+                    </td>
                     <td style={{ padding: '0.75rem', color: '#94a3b8' }}>{d.year}</td>
                     <td style={{ padding: '0.75rem' }}>{formatCurrency(d.balance)}</td>
                     <td style={{ padding: '0.75rem', color: d.rmd > 0 ? '#f87171' : '#94a3b8' }}>
@@ -293,7 +294,7 @@ const App: React.FC = () => {
             </table>
           </div>
         </main>
-      </div>
+      </div >
 
       <details className="card info-section">
         <summary>About these numbers</summary>
@@ -321,7 +322,7 @@ const App: React.FC = () => {
           </ul>
         </div>
       </details>
-    </div>
+    </div >
   );
 };
 

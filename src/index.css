@@ -222,6 +222,16 @@ button:hover {
   margin-left: 0;
 }
 
+.tooltip-text.align-left {
+  left: 0;
+  margin-left: -12px;
+}
+
+.tooltip-text.auto-width {
+  width: max-content;
+  max-width: 240px;
+}
+
 /* Tooltip arrow */
 .tooltip-text::after {
   content: "";
@@ -238,6 +248,11 @@ button:hover {
 .tooltip-text.align-right::after {
   left: auto;
   right: 12px;
+  margin-left: 0;
+}
+
+.tooltip-text.align-left::after {
+  left: 17px;
   margin-left: 0;
 }
 

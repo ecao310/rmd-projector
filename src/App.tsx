@@ -12,12 +12,19 @@ import { calculateRMD, UNIFORM_LIFETIME_TABLE } from './utils/rmdTable';
 import { calculateTax, FilingStatus, STANDARD_DEDUCTION_2026, TAX_BRACKETS_2026 } from './utils/taxUtils';
 import { Info } from 'lucide-react';
 
-const TooltipItem: React.FC<{ text: string, alignRight?: boolean }> = ({ text, alignRight }) => (
-  <span className="tooltip-container">
-    <Info size={14} color="#94a3b8" />
-    <span className={`tooltip-text ${alignRight ? 'align-right' : ''}`}>{text}</span>
-  </span>
-);
+const TooltipItem: React.FC<{ text: string, alignRight?: boolean, alignLeft?: boolean, autoWidth?: boolean, children?: React.ReactNode }> = ({ text, alignRight, alignLeft, autoWidth, children }) => {
+  let classes = 'tooltip-text';
+  if (alignRight) classes += ' align-right';
+  if (alignLeft) classes += ' align-left';
+  if (autoWidth) classes += ' auto-width';
+
+  return (
+    <span className="tooltip-container" style={children ? { marginLeft: 0 } : undefined}>
+      {children || <Info size={14} color="#94a3b8" />}
+      <span className={classes}>{text}</span>
+    </span>
+  );
+};
 
 interface ProjectionData {
   year: number;
@@ -268,13 +275,18 @@ const App: React.FC = () => {
               </thead>
               <tbody>
                 {projection.map((d: ProjectionData) => (
-                  <tr key={d.age} style={{ borderBottom: '1px solid #0f172a' }}>
+                  <tr
+                    key={d.age}
+                    style={{
+                      borderBottom: '1px solid #0f172a',
+                      backgroundColor: d.rmd > annualWithdrawal ? 'rgba(239, 68, 68, 0.1)' : 'transparent'
+                    }}
+                  >
                     <td style={{ padding: '0.75rem' }}>
                       {d.rmd > 0 && UNIFORM_LIFETIME_TABLE[d.age] ? (
-                        <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-                          {d.age}
-                          <TooltipItem text={`RMD: ${((1 / UNIFORM_LIFETIME_TABLE[d.age]) * 100).toFixed(2)}%`} />
-                        </span>
+                        <TooltipItem text={`RMD: ${((1 / UNIFORM_LIFETIME_TABLE[d.age]) * 100).toFixed(2)}%`} alignLeft autoWidth>
+                          <span style={{ borderBottom: '1px dotted #94a3b8' }}>{d.age}</span>
+                        </TooltipItem>
                       ) : (
                         d.age
                       )}

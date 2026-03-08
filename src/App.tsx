@@ -130,7 +130,10 @@ const App: React.FC = () => {
           </div>
 
           <div className="input-group">
-            <label htmlFor="withdrawal">Annual Withdrawal ($)</label>
+            <label htmlFor="withdrawal">
+              Annual Withdrawal ($)
+              <TooltipItem text="Planned withdrawal from only retirement accounts subject to RMDs." />
+            </label>
             <input
               id="withdrawal"
               type="number"
@@ -264,9 +267,7 @@ const App: React.FC = () => {
                   <th style={{ padding: '0.75rem' }}>Year</th>
                   <th style={{ padding: '0.75rem' }}>Balance</th>
                   <th style={{ padding: '0.75rem' }}>RMD</th>
-                  <th style={{ padding: '0.75rem' }}>
-                    <span className="desktop-only">Total </span>Withdrawal
-                  </th>
+                  <th style={{ padding: '0.75rem' }}>Withdrawal</th>
                   <th style={{ padding: '0.75rem' }}>
                     Est. Tax
                     <TooltipItem text="Estimated income tax paid on the total withdrawal." alignRight />
